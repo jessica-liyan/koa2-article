@@ -1,0 +1,36 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'E:\\nodejs\\node_modules\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'dev' ]
+2 info using npm@3.10.10
+3 info using node@v8.11.2
+4 verbose run-script [ 'predev', 'dev', 'postdev' ]
+5 info lifecycle koa-mongo@0.1.0~predev: koa-mongo@0.1.0
+6 silly lifecycle koa-mongo@0.1.0~predev: no script for predev, continuing
+7 info lifecycle koa-mongo@0.1.0~dev: koa-mongo@0.1.0
+8 verbose lifecycle koa-mongo@0.1.0~dev: unsafe-perm in lifecycle true
+9 verbose lifecycle koa-mongo@0.1.0~dev: PATH: E:\nodejs\node_modules\node_modules\npm\bin\node-gyp-bin;E:\backend\koa后台和前台\koa2-mongodb\node_modules\.bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\Git\cmd;C:\Program Files\OpenVPN\bin;C:\Program Files\nodejs\;C:\Python27;D:\phpStudy\PHPTutorial\php\php-7.2.1-nts;C:\ProgramData\ComposerSetup\bin;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\Microsoft VS Code\bin;C:\ProgramData\chocolatey\bin;D:\projects\flutter\bin;D:\Ruby23-x64\bin;C:\Program Files (x86)\Microsoft VS Code\bin;D:\sdk\platform-tools;D:\sdk\tools;C:\Program Files\Git\usr\bin;C:\Users\27794\AppData\Local\atom\bin;E:\phpStudy\php\php-7.0.12-nts;D:\gradle-4.5.1-all\gradle-4.5.1\bin;C:\Program Files\Java\jdk-9.0.4\bin;C:\Users\27794\AppData\Roaming\npm;C:\Users\27794\AppData\Roaming\Composer\vendor\bin;C:\Users\27794\AppData\Local\Microsoft\WindowsApps;;C:\Users\27794\AppData\Local\Programs\Microsoft VS Code\bin;C:\Program Files\Docker Toolbox
+10 verbose lifecycle koa-mongo@0.1.0~dev: CWD: E:\backend\koa后台和前台\koa2-mongodb
+11 silly lifecycle koa-mongo@0.1.0~dev: Args: [ '/d /s /c', 'nodemon bin/www' ]
+12 verbose stack Error: kill ENOSYS
+12 verbose stack     at Object._errnoException (util.js:992:11)
+12 verbose stack     at process.kill (internal/process.js:183:18)
+12 verbose stack     at process.listener (E:\nodejs\node_modules\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:86:15)
+12 verbose stack     at emitNone (events.js:111:20)
+12 verbose stack     at process.emit (events.js:208:7)
+12 verbose stack     at processEmit (E:\nodejs\node_modules\node_modules\npm\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+12 verbose stack     at processEmit (E:\nodejs\node_modules\node_modules\npm\node_modules\npm-registry-client\node_modules\npmlog\node_modules\gauge\node_modules\signal-exit\index.js:146:32)
+12 verbose stack     at Signal.wrap.onsignal (internal/process.js:208:44)
+13 verbose cwd E:\backend\koa后台和前台\koa2-mongodb
+14 error Windows_NT 10.0.17134
+15 error argv "C:\\Program Files\\nodejs\\node.exe" "E:\\nodejs\\node_modules\\node_modules\\npm\\bin\\npm-cli.js" "run" "dev"
+16 error node v8.11.2
+17 error npm  v3.10.10
+18 error code ENOSYS
+19 error errno ENOSYS
+20 error syscall kill
+21 error kill ENOSYS
+22 error If you need help, you may report this error at:
+22 error     <https://github.com/npm/npm/issues>
+23 verbose exit [ 1, true ]

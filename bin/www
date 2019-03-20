@@ -1,0 +1,176 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('demo:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '4000');
+// app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app.callback());
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+
+//  添加
+var socketIo = require('socket.io')
+var io = socketIo(server)
+var User = require('../model/user')
+var Socket = require('../model/socket')
+var Message = require('../model/message')
+var Group = require('../model/group')
+
+io.on('connection', async (socket) => { 
+  console.log('客户端接入',socket.id , socket.request.connection.remoteAddress)
+
+  socket.on('updateUserSocket', async (userId) => {
+    const target = await Socket.findOne({user: userId})
+    if(!target){
+      await Socket.create({
+        id: socket.id,
+        ip: socket.request.connection.remoteAddress,
+        user: userId
+      })
+    } else {
+      await Socket.update({user: userId}, {
+        id: socket.id
+      })
+    }
+
+    const user = await User.findById(userId)
+    user.online = true
+    user.save()
+
+    io.emit('sys', `${user.name}上线了`)
+  })
+
+  socket.on('chat', async (params) => { 
+    // 消息 {to, from, content, type}
+    const msg = await Message.create(params)
+    // 广播
+    const sendMsg = await Message.findById(msg._id).populate({path: 'from', select: 'name avatar'})
+    const target = await Socket.findOne({user: params.to})
+
+    if(params.type === 'text'){
+      io.to(target.id).emit('getNewMessage', sendMsg)
+    } else {
+      io.to(params.to).emit('getNewMessage', sendMsg)
+    }
+
+    // 会话表（join(to, from)  message: []）
+  })
+
+  // 用户连接之后，加入群组房间
+  socket.on('join', async (userId) => {
+    const user = await User.findById(userId)
+    const group = await Group.find({members: userId})
+    group.map((item) => {
+      socket.join(item._id)
+      //io.to(item._id).emit('sys', `${user.name}加入了房间${item._id}`)
+    })
+  })
+  
+  
+
+  // 客户端退出
+  socket.on('disconnect', async () =>{
+    console.log('客户端退出', socket.id);
+    const target = await Socket.findOne({id: socket.id})
+    let user = await User.findById(target.user)
+
+    user.online = false
+    user.save()
+
+    setTimeout(async () => {// 判断是刷新，还是真的退出
+      user = await User.findById(target.user)
+      if(user.online){
+        console.log('只是刷新页面')
+      }else{
+        console.log('用户离线')
+        await Socket.remove({
+          id: socket.id
+        })
+        io.emit('sys', `${user.name}用户退出登录`)
+      }
+    }, 5000)
+  });
+  
+});
+
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+  var port = parseInt(val, 10);
+
+  if (isNaN(port)) {
+    // named pipe
+    return val;
+  }
+
+  if (port >= 0) {
+    // port number
+    return port;
+  }
+
+  return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+  if (error.syscall !== 'listen') {
+    throw error;
+  }
+
+  var bind = typeof port === 'string'
+    ? 'Pipe ' + port
+    : 'Port ' + port;
+
+  // handle specific listen errors with friendly messages
+  switch (error.code) {
+    case 'EACCES':
+      console.error(bind + ' requires elevated privileges');
+      process.exit(1);
+      break;
+    case 'EADDRINUSE':
+      console.error(bind + ' is already in use');
+      process.exit(1);
+      break;
+    default:
+      throw error;
+  }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+  var addr = server.address();
+  var bind = typeof addr === 'string'
+    ? 'pipe ' + addr
+    : 'port ' + addr.port;
+  debug('Listening on ' + bind);
+}
